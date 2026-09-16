@@ -12,22 +12,49 @@ Programmer:
   Galpo, Rhile L.
 
 Date:
-  2 September 2026
-----------------------------------------------------*/
+  9 September 2026
+-------------------------------------------*/
 // GPIOS
-uint8_t const LED[] = {32, 33, 25, 26, 27, 12};
-uint8_t const NUM_PINS = sizeof(LED) / sizeof(LED[0]);
+uint8_t const LED[] = {32, 33, 25, 26, 27, 14};
+uint8_t const NUM_PINS = sizeof(LED)/sizeof(LED[0]);
+const uint8_t SW1 = 18;
+const uint8_t SW2 = 19;
+
+bool SW1_state = 0;
+bool SW2_state = 0;
+
+#include "LED_Modes.h"
 
 void setup() {
+
+  pinMode(SW1, INPUT);
+  pinMode(SW2, INPUT);
+
   for (int i = 0; i < NUM_PINS; i++) {
     pinMode(LED[i], OUTPUT);
   }
 }
 
-#include "LED_Modes.h"
-// 3 cycle 
-void loop() {
-  blink();   
-  alt();
-  run();
+
+void loop(){
+
+  SW1_state = digitalRead(SW1);
+  SW2_state = digitalRead(SW2);
+
+  // 01 - BLINK
+  if(SW1_state == 0 && SW2_state == 1){
+    blink();
+  }
+  // 10 - ALT
+  else if(SW1_state && !SW2_state){
+    alt();
+  }
+  // 11 - RUN
+  else if(SW1_state && SW2_state){
+    run();
+  }
+  // 00 - OFF
+  else{
+    off();
+  }
 }
