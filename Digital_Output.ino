@@ -30,3 +30,4 @@ void loop() {
   blink();   
   alt();
   run();
+}
